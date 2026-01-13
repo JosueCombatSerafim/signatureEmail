@@ -1,94 +1,326 @@
-<table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; color:#000;">
-  <tr>
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Gerador de Assinatura</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                display: flex;
+                gap: 20px;
+            }
+            .form-container {
+                width: 300px;
+            }
+            .form-container input {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 6px;
+                font-size: 14px;
+            }
+            .buttons {
+                margin-top: 10px;
+            }
+            .buttons button {
+                margin-right: 10px;
+                padding: 6px 12px;
+                font-size: 14px;
+                cursor: pointer;
+            }
+            .preview-container {
+                flex: 1;
+                border: 1px solid #ccc;
+                padding: 16px;
+                overflow-x: auto;
+            }
+            .error {
+                color: red;
+                font-size: 12px;
+                margin-bottom: 10px;
+                display: none;
+            }
+        </style>
+    </head>
 
-    <!-- COLUNA LOGO -->
-    <td style="padding:16px 24px 16px 0; vertical-align:middle;">
-      <img
-        src="https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/email/coreclinics/logo.png"
-        width="140"
-        alt="CoreClinics"
-        style="display:block;"
-      >
-    </td>
+    <body>
+        <!-- FORMULÁRIO -->
+        <div class="form-container">
+            <h3>Preencha seus dados:</h3>
 
-    <!-- COLUNA TEXTO -->
-    <td style="padding:16px 24px; vertical-align:middle; border-left:1px solid #eee;">
-      <div style="font-size:22px; font-weight:bold; color:#000; line-height:1.2;">
-        Pablo dos Santos Ribeiro
-      </div>
+            <input type="text" id="name" placeholder="Nome completo" />
+            <input type="text" id="position" placeholder="Cargo (opcional)" />
+            <input type="email" id="email" placeholder="Email (opcional)" />
+            <div id="email-error" class="error">Email inválido!</div>
+            <input type="text" id="phone" placeholder="Telefone (opcional)" />
 
-      <div style="font-size:16px; color:#ff008c; margin:6px 0 12px 0;">
-        CEO
-      </div>
+            <div class="buttons">
+                <button onclick="copySignature()">Copiar assinatura</button>
+                <button onclick="downloadSignature()">Baixar HTML</button>
+            </div>
+        </div>
 
-      <!-- Email -->
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="padding-right:8px;">
-            <img
-              src="https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/email/coreclinics/email.png"
-              width="18"
-              alt="Email"
-              style="display:block;"
-            >
-          </td>
-          <td style="font-size:14px;">
-            <a href="mailto:mail@gmail.com" style="color:#000; text-decoration:none;">
-              mail@gmail.com
-            </a>
-          </td>
-        </tr>
-      </table>
+        <!-- PREVIEW -->
+        <div class="preview-container">
+            <div id="signature">
+                <table
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="font-family: Arial, sans-serif; color: #000"
+                >
+                    <tr>
+                        <td style="padding: 16px 0; vertical-align: middle">
+                            <img
+                                src="https://raw.githubusercontent.com/JosueCombatSerafim/signatureEmail/main/CoreClinics/assets/logo.png"
+                                width="140"
+                                alt="CoreClinics"
+                                style="display: block"
+                            />
+                        </td>
 
-      <!-- WhatsApp -->
-      <table cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;">
-        <tr>
-          <td style="padding-right:8px;">
-            <img
-              src="https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/email/coreclinics/whatsapp.png"
-              width="18"
-              alt="WhatsApp"
-              style="display:block;"
-            >
-          </td>
-          <td style="font-size:14px;">
-            <a href="tel:+550000000000" style="color:#000; text-decoration:none;">
-              (00) 00000-0000
-            </a>
-          </td>
-        </tr>
-      </table>
-    </td>
+                        <td style="padding: 16px 5px; vertical-align: middle">
+                            <!-- NOME -->
+                            <div
+                                style="
+                                    font-size: 22px;
+                                    font-weight: bold;
+                                    line-height: 1.2;
+                                "
+                                data-field="name"
+                            >
+                                Nome Completo
+                            </div>
 
-    <!-- COLUNA REDES -->
-    <td style="padding:16px 0 16px 24px; vertical-align:middle; border-left:1px solid #eee;">
-      <a href="https://instagram.com" target="_blank" style="text-decoration:none;">
-        <img
-          src="https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/email/coreclinics/instagram.png"
-          width="22"
-          alt="Instagram"
-          style="display:block; margin-bottom:8px;"
-        >
-      </a>
+                            <!-- CARGO -->
+                            <div
+                                data-wrapper="position"
+                                style="
+                                    font-size: 16px;
+                                    color: #ff008c;
+                                    margin: 0 0 4px 0;
+                                    display: none;
+                                "
+                            >
+                                <span data-field="position"></span>
+                            </div>
 
-      <a href="https://linkedin.com" target="_blank" style="text-decoration:none;">
-        <img
-          src="https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/email/coreclinics/linkedin.png"
-          width="22"
-          alt="LinkedIn"
-          style="display:block; margin-bottom:8px;"
-        >
-      </a>
+                            <!-- EMAIL -->
+                            <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                data-wrapper="email"
+                                style="display: none"
+                            >
+                                <tr>
+                                    <td style="padding-right: 8px">
+                                        <img
+                                            src="https://raw.githubusercontent.com/JosueCombatSerafim/signatureEmail/main/CoreClinics/assets/icon_email.png"
+                                            width="18"
+                                            alt="Email"
+                                        />
+                                    </td>
+                                    <td style="font-size: 14px">
+                                        <a
+                                            href="#"
+                                            data-field="email-link"
+                                            style="
+                                                color: #000;
+                                                text-decoration: none;
+                                            "
+                                        ></a>
+                                    </td>
+                                </tr>
+                            </table>
 
-      <a href="https://coreclinics.com" target="_blank" style="text-decoration:none;">
-        <img
-          src="https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/email/coreclinics/site.png"
-          width="22"
-          alt="Website"
-          style="display:block;"
-        >
-      </a>
-    </td>
+                            <!-- TELEFONE -->
+                            <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                data-wrapper="phone"
+                                style="margin-top: 6px; display: none"
+                            >
+                                <tr>
+                                    <td style="padding-right: 6px">
+                                        <img
+                                            src="https://raw.githubusercontent.com/JosueCombatSerafim/signatureEmail/main/CoreClinics/assets/icon_whatsapp.png"
+                                            width="18"
+                                            alt="WhatsApp"
+                                        />
+                                    </td>
+                                    <td style="font-size: 14px">
+                                        <a
+                                            href="#"
+                                            data-field="phone"
+                                            style="
+                                                color: #000;
+                                                text-decoration: none;
+                                            "
+                                        ></a>
+                                    </td>
+                                </tr>
+                            </table>
 
-  </tr>
-</table>
+                            <!-- REDES SOCIAIS (SEMPRE VISÍVEL) -->
+                            <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                style="margin-top: 8px"
+                            >
+                                <tr>
+                                    <td style="font-size: 0">
+                                        <a
+                                            href="https://www.instagram.com/coreclinicsbr/"
+                                            target="_blank"
+                                        >
+                                            <img
+                                                src="https://raw.githubusercontent.com/JosueCombatSerafim/signatureEmail/main/CoreClinics/assets/icon_insta.png"
+                                                width="18"
+                                                alt="Instagram"
+                                                style="margin-right: 6px"
+                                            />
+                                        </a>
+                                        <a
+                                            href="https://www.linkedin.com/company/core-clinics-br"
+                                            target="_blank"
+                                        >
+                                            <img
+                                                src="https://raw.githubusercontent.com/JosueCombatSerafim/signatureEmail/main/CoreClinics/assets/icon_linkedin.png"
+                                                width="18"
+                                                alt="LinkedIn"
+                                                style="margin-right: 6px"
+                                            />
+                                        </a>
+                                        <a
+                                            href="https://coreclinics.com.br"
+                                            target="_blank"
+                                        >
+                                            <img
+                                                src="https://raw.githubusercontent.com/JosueCombatSerafim/signatureEmail/main/CoreClinics/assets/icon_site.png"
+                                                width="18"
+                                                alt="Website"
+                                            />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            const fields = ["name", "position", "email", "phone"];
+            const emailInput = document.getElementById("email");
+            const emailError = document.getElementById("email-error");
+
+            function formatPhone(value) {
+                let digits = value.replace(/\D/g, "");
+                if (digits.length > 11) digits = digits.slice(0, 11);
+                digits = digits.replace(/^(\d{2})(\d)/, "($1) $2");
+                digits = digits.replace(/(\d{5})(\d{4})$/, "$1-$2");
+                return digits;
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            fields.forEach((field) => {
+                const input = document.getElementById(field);
+
+                input.addEventListener("input", () => {
+                    const wrapper = document.querySelector(
+                        `[data-wrapper="${field}"]`
+                    );
+
+                    if (field === "name") {
+                        document.querySelector(
+                            '[data-field="name"]'
+                        ).textContent =
+                            input.value || "Nome Completo";
+                        return;
+                    }
+
+                    if (!input.value.trim()) {
+                        if (wrapper) wrapper.style.display = "none";
+                        return;
+                    } else {
+                        if (wrapper) wrapper.style.display = "";
+                    }
+
+                    if (field === "position") {
+                        document.querySelector(
+                            '[data-field="position"]'
+                        ).textContent = input.value;
+                    }
+
+                    if (field === "email") {
+                        if (!isValidEmail(input.value)) return;
+                        emailError.style.display = "none";
+                        const el = document.querySelector(
+                            '[data-field="email-link"]'
+                        );
+                        el.textContent = input.value;
+                        el.href = "mailto:" + input.value;
+                    }
+
+                    if (field === "phone") {
+                        const formatted = formatPhone(input.value);
+                        input.value = formatted;
+                        const el = document.querySelector(
+                            '[data-field="phone"]'
+                        );
+                        el.textContent = formatted;
+                        el.href =
+                            "https://wa.me/55" +
+                            formatted.replace(/\D/g, "");
+                    }
+                });
+            });
+
+            function copySignature() {
+                if (
+                    emailInput.value &&
+                    !isValidEmail(emailInput.value)
+                ) {
+                    emailError.style.display = "block";
+                    return;
+                }
+
+                const range = document.createRange();
+                range.selectNode(document.getElementById("signature"));
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand("copy");
+                sel.removeAllRanges();
+                alert("Assinatura copiada! Cole direto no Gmail.");
+            }
+
+            function downloadSignature() {
+                if (
+                    emailInput.value &&
+                    !isValidEmail(emailInput.value)
+                ) {
+                    emailError.style.display = "block";
+                    return;
+                }
+
+                const html =
+                    document.getElementById("signature").innerHTML;
+                const blob = new Blob([html], { type: "text/html" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "assinatura.html";
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>
